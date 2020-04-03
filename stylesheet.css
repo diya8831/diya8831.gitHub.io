@@ -16,7 +16,7 @@ h6,
 p,
 div {
   margin: 0;
-  padding: 0;
+  padding: 5px;
 }
 
 body {
@@ -32,7 +32,7 @@ a {
 }
 
 .container {
-  max-width: 1170px;
+  max-width: 1177px;
   padding: 0 15px;
   margin: 0 auto;
 }
@@ -266,22 +266,22 @@ header {
 
 .message:active {
   position: relative;
-  top: 7px;
+  top: 10px;
   box-shadow: none;
 }
 
 footer img {
-  width: 125px;
+  width: 130px;
 }
 
 footer p {
   color: #b3aeb5;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 footer {
-  padding-top: 30px;
-  padding-bottom: 20px;
+  padding-top: 32px;
+  padding-bottom: 22px;
 }
 
 /* Write your code below */
