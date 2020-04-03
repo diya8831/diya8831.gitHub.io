@@ -24,103 +24,171 @@ window.addEventListener("click", () => {
     closeModal();
   }
 });
-function generateQuiz(questions,quizContainer,resultsContainer,submitButton){
-  function showQuestions(questions,quizContainer){
-  }
-  function showResults(questions,quizContainer,resultsContainers){
-  }
-  showQuestions(questions,quizContainer);
-  submitButton.onclick=function(){
-    showResults(questions,quizContainer,resultsContainer);
-  }
-}
-var myQuestions=[
- {
-    question: "What does HTML stand for?",
-    answers:{
-      a: 'Hyperlinks and Text Markup Language',
-      b: 'Home Tool Markup Language',
-      c: 'Hyper text Markup Tool'
-    },
-    correctAnswer:'c' 
-  },
- {
-    question: "Who is making the Web standards?",
-    answers:{
-      a: 'Mozilla',
-      b: 'World Wide Web Consortium',
-      c: 'Google'
-    },
-    correctAnswer:'b' 
-  },
-  {
-    question: "what is the correct html element for inserting a line break?",
-    answers:{
-      a: '<br>',
-      b: '<break>',
-      c: '<lb>'
-    },
-    correctAnswer:'a' 
-  },
-  {
-    question: "what is the correct html element to define important text?",
-    answers:{
-      a: '<strong>',
-      b: '<b>',
-      c: '<i>'
-    },
-    correctAnswer:'a' 
-  },
-  {
-    question: "what is the correct html element to define emphasized text?",
-    answers:{
-      a: '<italic>',
-      b: '<em>',
-      c: '<i>'
-    },
-    correctAnswer:'b' 
-  }
-  ];
-function showQuestions(questions,quizContainer){
-  var output =[];
-  var answers;
-  for(var i=0;i<questions.length;i++){
-    answers =[];
-    for(letter in questions[i].answers){
-  answers.push(
-    '<label>'
-    + '<input type="radio" name="question'+i+'"value="'+letter+'">'
-    + letter + ':'
-    + questions[i].answers[letter]
-    +'</label>'
-    );
+(function() {
+  var questions = [{
+	    
+    question: "What is 5*2?",
+    choices: [2, 5, 10, 15, 20],
+    correctAnswer: 2
+  }, {
+    question: "What is 3*6?",
+    choices: [3, 6, 9, 12, 18],
+    correctAnswer: 4
+  }, {
+    question: "What is 8*9?",
+    choices: [72, 99, 108, 134, 156],
+    correctAnswer: 0
+  }, {
+    question: "What is 1*7?",
+    choices: [4, 5, 6, 7, 8],
+    correctAnswer: 3
+  }, {
+    question: "What is 8*8?",
+    choices: [20, 30, 40, 50, 64],
+    correctAnswer: 4
+  }];
+  
+  var questionCounter = 0; //Tracks question number
+  var selections = []; //Array containing user choices
+  var quiz = $('#quiz'); //Quiz div object
+  
+  // Display initial question
+  displayNext();
+  
+  // Click handler for the 'next' button
+  $('#next').on('click', function (e) {
+    e.preventDefault();
+    
+    // Suspend click listener during fade animation
+    if(quiz.is(':animated')) {        
+      return false;
     }
-    output.push(
-      '<div class="question">' + questions[i].question + '</div>'
-      + '<div class="answers">' + answers.join('') + '</div>'
-      );
+    choose();
+    
+    // If no user selection, progress is stopped
+    if (isNaN(selections[questionCounter])) {
+      alert('Please make a selection!');
+    } else {
+      questionCounter++;
+      displayNext();
+    }
+  });
+  
+  // Click handler for the 'prev' button
+  $('#prev').on('click', function (e) {
+    e.preventDefault();
+    
+    if(quiz.is(':animated')) {
+      return false;
+    }
+    choose();
+    questionCounter--;
+    displayNext();
+  });
+  
+  // Click handler for the 'Start Over' button
+  $('#start').on('click', function (e) {
+    e.preventDefault();
+    
+    if(quiz.is(':animated')) {
+      return false;
+    }
+    questionCounter = 0;
+    selections = [];
+    displayNext();
+    $('#start').hide();
+  });
+  
+  // Animates buttons on hover
+  $('.button').on('mouseenter', function () {
+    $(this).addClass('active');
+  });
+  $('.button').on('mouseleave', function () {
+    $(this).removeClass('active');
+  });
+  
+  // Creates and returns the div that contains the questions and 
+  // the answer selections
+  function createQuestionElement(index) {
+    var qElement = $('<div>', {
+      id: 'question'
+    });
+    
+    var header = $('<h2>Question ' + (index + 1) + ':</h2>');
+    qElement.append(header);
+    
+    var question = $('<p>').append(questions[index].question);
+    qElement.append(question);
+    
+    var radioButtons = createRadios(index);
+    qElement.append(radioButtons);
+    
+    return qElement;
   }
-  quizContainer.innerHTML = output.join('');
-}
-function showResults(questions, quizContainer, resultsContainer){
-	var answerContainers = quizContainer.querySelectorAll('.answers');
-	var userAnswer = '';
-	var numCorrect = 0;
-	for(var i=0; i<questions.length; i++){
-		userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
-		if(userAnswer===questions[i].correctAnswer){
-			numCorrect++;
-			answerContainers[i].style.color = 'lightgreen';
-		}
-		else{
-			answerContainers[i].style.color = 'red';
-		}
-	}
-	resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
-}
-submitButton.onclick = function(){
-	showResults(questions, quizContainer, resultsContainer);
-}
-var quizContainer = document.getElementById('quiz');
-var resultsContainer = document.getElementById('results');
-var submitButton = document.getElementById('submit');
+  
+  // Creates a list of the answer choices as radio inputs
+  function createRadios(index) {
+    var radioList = $('<ul>');
+    var item;
+    var input = '';
+    for (var i = 0; i < questions[index].choices.length; i++) {
+      item = $('<li>');
+      input = '<input type="radio" name="answer" value=' + i + ' />';
+      input += questions[index].choices[i];
+      item.append(input);
+      radioList.append(item);
+    }
+    return radioList;
+  }
+  
+  // Reads the user selection and pushes the value to an array
+  function choose() {
+    selections[questionCounter] = +$('input[name="answer"]:checked').val();
+  }
+  
+  // Displays next requested element
+  function displayNext() {
+    quiz.fadeOut(function() {
+      $('#question').remove();
+      
+      if(questionCounter < questions.length){
+        var nextQuestion = createQuestionElement(questionCounter);
+        quiz.append(nextQuestion).fadeIn();
+        if (!(isNaN(selections[questionCounter]))) {
+          $('input[value='+selections[questionCounter]+']').prop('checked', true);
+        }
+        
+        // Controls display of 'prev' button
+        if(questionCounter === 1){
+          $('#prev').show();
+        } else if(questionCounter === 0){
+          
+          $('#prev').hide();
+          $('#next').show();
+        }
+      }else {
+        var scoreElem = displayScore();
+        quiz.append(scoreElem).fadeIn();
+        $('#next').hide();
+        $('#prev').hide();
+        $('#start').show();
+      }
+    });
+  }
+  
+  // Computes score and returns a paragraph element to be displayed
+  function displayScore() {
+    var score = $('<p>',{id: 'question'});
+    
+    var numCorrect = 0;
+    for (var i = 0; i < selections.length; i++) {
+      if (selections[i] === questions[i].correctAnswer) {
+        numCorrect++;
+      }
+    }
+    
+    score.append('You got ' + numCorrect + ' questions out of ' +
+                 questions.length + ' right!!!');
+    return score;
+  }
+})();
