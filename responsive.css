@@ -1,20 +1,20 @@
 @media all and (max-width: 1000px) {
   .top-wrapper h1 {
-    font-size: 32px;
+    font-size: 34px;
   }
 
   .heading h2 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .lesson {
     width: 50%;
-    margin-bottom: 50px;
+    margin-bottom: 55px;
   }
 }
 
 /* For Smartphones */
-@media all and (max-width: 670px) {
+@media all and (max-width: 677px) {
   .header-right {
     display: none;
   }
@@ -28,7 +28,7 @@
   }
 
   .facebook {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   .top-wrapper {
@@ -36,13 +36,13 @@
   }
 
   .top-wrapper h1 {
-    font-size: 24px;
-    line-height: 36px;
+    font-size: 22px;
+    line-height: 34px;
   }
 
   .top-wrapper p {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 12px;
+    line-height: 18px;
   }
 
   .lesson {
